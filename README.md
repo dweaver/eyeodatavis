@@ -1,5 +1,12 @@
 # Visualizing Data with THREE.js
 
+Notes:
+Meshes have: mesh.position, mesh.scale, mesh.location
+tween.js could drive three.js
+particle (arms demo)
+shaders - glsl
+shadertop.com
+
 What you will learn in this workshop:
 
 1. Learn how to find, extract, and import data.

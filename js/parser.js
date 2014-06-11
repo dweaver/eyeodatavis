@@ -63,6 +63,63 @@ EYEO.Parsers = {
       keys: keys,
       counties: counties
     };
+  },
+  FishData: function( file ){
+    var str = EYEO.Util.CSVToArray( file );
+
+    //  key is on line 5
+    //  remember to subtract 1 because indices start at 0
+    var keyLine = 0;
+    var dataStart = 1;
+    var dataEnd = 80;
+
+    var keys = str[keyLine];
+
+    var counties = {};
+
+    //  we'll be construction keyvalue pairs like this:
+    //  {
+    //    County FIPS Code: 001
+    //    County: Aitkin County
+    //    etc
+    //  }
+
+    for( var i=dataStart; i<dataEnd; i++ ){
+      var county = {};
+      var values = str[i];
+
+      var keyIdx = 0;
+      var population = 0;
+      for( var s in keys ){
+        var keyName = keys[s];
+        if( keyName !== '' ){
+          var value = values[ keyIdx ];
+
+          //  do some cleanup
+          value = value.replace(/,/g,'');
+
+          //console.log(value);
+          // var pop = parseInt(value);
+          county[ keyName ] = value;
+          //console.log(value);
+          //population += pop;
+        }
+        keyIdx ++;
+      }
+
+      county.population = population;
+
+      //  the county names come in 'Carlton County' but our map name is just 'Carlton'
+      //  here we remove ' County' to match the map names
+      var countyName = county.County;
+
+      counties[ countyName ] = county;
+    }
+
+    return {
+      keys: keys,
+      counties: counties
+    };
   }
 }
 

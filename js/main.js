@@ -8,7 +8,8 @@ EYEO.load = function(){
   var resourceList = [
     'data/minnesota_counties.svg',
     'data/USA_Counties.svg',
-    'data/Census2010RaceCounty.csv'
+    'data/Census2010RaceCounty.csv',
+    'data/FishData.csv'
   ];
 
   //  this will call main when finished, and pass in structs

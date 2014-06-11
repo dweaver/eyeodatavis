@@ -26,8 +26,31 @@ EYEO.Visualization = function( resources, scene, camera, controls, picker, rende
     var data = EYEO.Parse( 'Census2010RaceCounty', resources );
     console.log(data);
 
+    var fishData = EYEO.Parse( 'FishData', resources );
+    console.log('fishData');
+    console.log(fishData);
+  
     var counties = data.counties;
 
+    var optsFish = {
+      fishType: 'rock bass',
+      scale: 50,
+      proportionalToCounty: true,
+    }
+
+    function updateFish() {
+      console.log('updating');
+      visualizeFish(optsFish.fishType, fishData.counties, meshes);
+    }
+    // TODO: load from CSV
+    fishSelections = ["spotted sucker", "bowfin (dogfish)", "sauger", "deepwater sculpin", "sand shiner", "black bullhead", "lake whitefish", "threespine stickleback", "ninespine stickleback", "channel catfish", "silver redhorse", "sunfish", "least darter", "smallmouth bass", "river shiner", "crappie", "river redhorse", "brown bullhead", "logperch", "bluegill", "blacknose dace", "alewife", "central stoneroller", "gizzard shad", "freshwater drum", "darters", "shorthead redhorse", "yellow bullhead", "pugnose shiner", "trout-perch", "shiners", "green sunfish", "creek chub", "crappie hybrid", "hornyhead chub", "northern sunfish", "carpsucker", "channel shiner", "round whitefish", "shortnose gar", "bullhead minnow", "bluntnose minnow", "walleye", "sea lamprey", "longnose sucker", "largemouth bass", "mooneye", "weed shiner", "brook silverside", "highfin carpsucker", "black buffalo", "bigmouth shiner", "rock bass", "finescale dace", "rosyface shiner", "minnow hybrid", "longnose gar", "rainbow darter", "golden redhorse", "river carpsucker", "spotfin shiner", "goldfish", "suckers", "brook trout", "lake trout", "lake sturgeon", "river ruffe", "northern pearl dace", "lamprey", "quillback", "orangespotted sunfish", "spoonhead sculpin", "white perch", "shovelnose sturgeon", "iowa darter", "tadpole madtom", "pygmy whitefish", "longnose dace", "sculpin", "tullibee (cisco)", "slimy sculpin", "white crappie", "chestnut lamprey", "common carp", "greater redhorse", "brown trout", "northern redbelly dace", "pumpkinseed", "freshwater tubenose goby", "northern pike", "minnows", "common shiner", "goldeye", "river darter", "carmine shiner", "flathead catfish", "smallmouth buffalo", "banded killifish", "emerald shiner", "blacknose shiner", "white sucker", "muskellunge", "splake", "bloater", "rainbow trout", "hybrid sunfish", "mottled sculpin", "round goby", "yellow perch", "silver lamprey", "blackside darter", "walleye/sauger", "northern hog sucker", "bullheads", "warmouth", "northern pike-silverphase", "golden shiner", "central mudminnow", "black crappie", "bigmouth buffalo", "burbot", "mirror carp", "lake chub", "brassy minnow", "johnny darter", "stonecat", "rainbow smelt", "shortjaw cisco", "blackchin shiner", "brook stickleback", "white bass", "tiger muskellunge", "cisco species", "slenderhead darter", "redhorse", "mimic shiner", "american eel", "fathead minnow", "buffalo", "spottail shiner"]
+
+    gui.add( optsFish, 'fishType', fishSelections).onFinishChange( function(fishType) {
+      visualizeFish(optsFish.fishType, fishData.counties, meshes);
+    });
+    updateFish();
+
+    /*
     var opts = {
       ethnicity: 'Asian',
       scale: 50,
@@ -53,10 +76,40 @@ EYEO.Visualization = function( resources, scene, camera, controls, picker, rende
 
     gui.add( opts, 'ethnicity', raceKey ).onFinishChange( updateEthnicity );
     gui.add( opts, 'scale', 10, 1000 ).onFinishChange( updateEthnicity );
-
     updateEthnicity();
+    */
 
     // EYEO.Util.addLabels( meshes, camera, renderer, counties, opts.ethnicity );
+  }
+
+  function visualizeFish( fishType, counties, meshes, height, local ){
+    var counties = counties;
+    var statePopulation = counties.statePopulation;
+
+    meshes.traverse( function( mesh ){
+      if( (mesh instanceof THREE.Mesh) === false){
+        return;
+      }
+      //  look it up
+      var county = counties[ mesh.id ];
+      // console.log(county);
+      if ( county ) {
+        var fishPop = county[ fishType ];
+        var totalPop = county[ 'population' ];
+        console.log(fishPop, totalPop);
+        var scale = fishPop / 10000;// / totalPop * height;
+        scale = Math.pow( scale, 2 );
+
+        if( scale === 0 ){
+          scale = 0.000001;
+        }
+
+        mesh.scale.z = scale;
+      }
+      else{
+        mesh.scale.z = 0.000001;
+      }
+    });
   }
 
   /*
