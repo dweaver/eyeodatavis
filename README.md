@@ -2,6 +2,9 @@
 
 This is a fork of @mflux's THREE.js sample for Eyeo. Instead of county population and income data, it plots fish population size estimates for each Minnesota county.
 
+![screenshot](screenshot.png "Bass population by county")
+
+
 # Original README
 
 What you will learn in this workshop:
