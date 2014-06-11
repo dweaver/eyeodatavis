@@ -1,11 +1,8 @@
 # Visualizing Data with THREE.js
 
-Notes:
-Meshes have: mesh.position, mesh.scale, mesh.location
-tween.js could drive three.js
-particle (arms demo)
-shaders - glsl
-shadertop.com
+This is a fork of @mflux's THREE.js sample for Eyeo. Instead of county population and income data, it plots fish population size estimates for each Minnesota county.
+
+# Original README
 
 What you will learn in this workshop:
 
