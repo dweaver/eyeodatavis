@@ -84,12 +84,13 @@ EYEO.Parsers = {
     //    etc
     //  }
 
+    var totalsByFishType = {};
     for( var i=dataStart; i<dataEnd; i++ ){
       var county = {};
       var values = str[i];
 
       var keyIdx = 0;
-      var population = 0;
+      var total = 0;
       for( var s in keys ){
         var keyName = keys[s];
         if( keyName !== '' ){
@@ -100,14 +101,32 @@ EYEO.Parsers = {
 
           //console.log(value);
           // var pop = parseInt(value);
-          county[ keyName ] = value;
           //console.log(value);
-          //population += pop;
+          //console.log(value);
+          
+          /*
+          console.log('keyName: ', keyName, ', value: ', value);
+          county[ keyName ] = value;
+          */
+
+          if (keyName === 'fips' || keyName === 'County') {
+            county[ keyName ] = value;
+          } else {
+            var num = parseInt(value);
+            //console.log('num: ', num);
+            county[ keyName ] = num;
+            if (!totalsByFishType.hasOwnProperty(keyName)) {
+              totalsByFishType[ keyName ] = 0;
+            }
+            totalsByFishType[ keyName ] += num;
+            total += num;
+          }
+          //console.log("value: ", value);
         }
         keyIdx ++;
       }
 
-      county.population = population;
+      county.total = total;
 
       //  the county names come in 'Carlton County' but our map name is just 'Carlton'
       //  here we remove ' County' to match the map names
@@ -116,9 +135,11 @@ EYEO.Parsers = {
       counties[ countyName ] = county;
     }
 
+    console.log(totalsByFishType);
     return {
       keys: keys,
-      counties: counties
+      counties: counties,
+      totalsByFishType: totalsByFishType
     };
   }
 }
